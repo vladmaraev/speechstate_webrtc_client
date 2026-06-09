@@ -1471,17 +1471,17 @@ var displayMediaOptions = {
   surfaceSwitching: "include",
   monitorTypeSurfaces: "include"
 };
-var setupRecorders = () => new Promise(async (resolve, _reject) => {
+var setupRecorders = (signallingId) => new Promise(async (resolve, _reject) => {
   const recorders = [
-    await connect("egress_screen", "a+v"),
-    await connect("egress_mic", "a")
+    await connect("egress_screen", "a+v", signallingId),
+    await connect("egress_mic", "a", signallingId)
   ];
   resolve({
     pcs: recorders.map((r) => r.pc),
     sockets: recorders.map((r) => r.socket)
   });
 });
-var connect = (suffix, mode) => {
+var connect = (suffix, mode, signallingId) => {
   return new Promise(async (resolve, reject) => {
     const socket = new Socket("signalling", {
       params: {
@@ -1574,7 +1574,6 @@ var startEgressConnection = async (channel, topic, socket, mode) => {
     await primeTracksAndOffer();
   });
 };
-var signallingId = document.getElementById("container").getAttribute("data-signalling-id");
 export {
   setupRecorders
 };

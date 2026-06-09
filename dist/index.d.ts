@@ -1,5 +1,5 @@
 import { Socket } from "phoenix";
-type SetupRecorders = () => Promise<{
+type SetupRecorders = (signallingId: string) => Promise<{
     pcs: RTCPeerConnection[];
     sockets: Socket[];
 }>;

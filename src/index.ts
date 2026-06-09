@@ -14,15 +14,15 @@ const displayMediaOptions = {
   monitorTypeSurfaces: "include",
 };
 
-type SetupRecorders = () => Promise<{
+type SetupRecorders = (signallingId: string) => Promise<{
   pcs: RTCPeerConnection[];
   sockets: Socket[];
 }>;
-export const setupRecorders: SetupRecorders = () =>
+export const setupRecorders: SetupRecorders = (signallingId) =>
   new Promise(async (resolve, _reject) => {
     const recorders = [
-      await connect("egress_screen", "a+v"),
-      await connect("egress_mic", "a"),
+      await connect("egress_screen", "a+v", signallingId),
+      await connect("egress_mic", "a", signallingId),
     ];
     resolve({
       pcs: recorders.map((r) => r.pc),
@@ -33,8 +33,9 @@ export const setupRecorders: SetupRecorders = () =>
 type Connect = (
   suffix: string,
   mode: string,
+  signallingId: string,
 ) => Promise<{ pc: RTCPeerConnection; socket: Socket }>;
-const connect: Connect = (suffix, mode) => {
+const connect: Connect = (suffix, mode, signallingId) => {
   return new Promise(async (resolve, reject) => {
     const socket = new Socket("signalling", {
       params: {
@@ -195,6 +196,6 @@ const replaceWithUserMedia = async (
     );
 };
 
-const signallingId = document
-  .getElementById("container")!
-  .getAttribute("data-signalling-id");
+// const signallingId = document
+//   .getElementById("container")!
+//   .getAttribute("data-signalling-id");
